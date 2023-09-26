@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import {ERC1967Proxy} from "openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+import {ERC1967Proxy} from "lib/openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import {Script} from "../../lib/forge-std/src/Script.sol";
-import {Counter} from "src/Counter.sol";
-import {Counter2} from "src/Counter2.sol";
-import "forge-std/Test.sol";
+import {Counter} from "src/uups/Counter.sol";
+import {Counter2} from "src/uups/Counter2.sol";
 
-// forge script script/Deploy.s.sol:DeployUUPS --private-key $KEY  --rpc-url https://rpc.ankr.com/eth_goerli -vvvv  --verify --etherscan-api-key $API --broadcast
+// forge script script/DeployUUPS.s.sol:DeployUUPS --private-key $KEY  --rpc-url https://rpc.ankr.com/eth_goerli -vvvv  --verify --etherscan-api-key $API --broadcast
 contract DeployUUPS is Script {
     address public proxy;
     address public counter;
@@ -19,9 +18,9 @@ contract DeployUUPS is Script {
         deployCounter();
         deployProxy();
 
-        // upgrading
-        deployCounter2();
-        upgradeTo();
+        // // upgrading
+        // deployCounter2();
+        // upgradeTo();
 
         vm.stopBroadcast();
     }
@@ -42,6 +41,4 @@ contract DeployUUPS is Script {
     function upgradeTo() internal {
         Counter(proxy).upgradeTo(counter2);
     }
-
-
 }
