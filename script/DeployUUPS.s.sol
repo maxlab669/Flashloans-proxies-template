@@ -18,9 +18,9 @@ contract DeployUUPS is Script {
         deployCounter();
         deployProxy();
 
-        // // upgrading
-        // deployCounter2();
-        // upgradeTo();
+        // upgrading
+        deployCounter2();
+        upgradeTo();
 
         vm.stopBroadcast();
     }
