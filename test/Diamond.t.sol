@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "lib/forge-std/src/Test.sol";
+import "forge-std/Test.sol";
 import {Diamond} from "src/diamond/Diamond.sol";
 import {IDiamond} from "src/diamond/interfaces/IDiamond.sol";
 import {IDiamondCut} from "src/diamond/interfaces/IDiamondCut.sol";

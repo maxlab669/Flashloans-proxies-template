@@ -44,7 +44,7 @@ contract Test2Facet {
 }
 
 import {LibDiamond} from "src/diamond/libraries/LibDiamond.sol";
-import "lib/forge-std/src/Test.sol";
+import "forge-std/Test.sol";
 
 contract Facet2 {
     struct Facet2Storage {

@@ -1,8 +1,8 @@
 pragma solidity ^0.8.0;
 
-import "lib/forge-std/src/Test.sol";
+import "forge-std/Test.sol";
 
-import {Script} from "../../lib/forge-std/src/Script.sol";
+import {Script} from "forge-std/Script.sol";
 
 contract ContractOne {
     function add(uint256 x) public view returns (uint256) {

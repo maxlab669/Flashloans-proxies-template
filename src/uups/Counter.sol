@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 // import {Initializable} from "openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
-import {UUPSUpgradeable} from "lib/openzeppelin-contracts/contracts/proxy/utils/UUPSUpgradeable.sol";
-import {OwnableUpgradeable} from "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
+import {UUPSUpgradeable} from "openzeppelin-contracts/contracts/proxy/utils/UUPSUpgradeable.sol";
+import {OwnableUpgradeable} from "openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 
 contract Counter is UUPSUpgradeable, OwnableUpgradeable {
     uint256 public number;
