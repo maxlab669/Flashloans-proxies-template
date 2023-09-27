@@ -35,27 +35,39 @@ contract DeployMetamorphic2 is Script {
   function run() external {
     vm.startBroadcast();
 
+    // deployOne();
+
+    // killOne(); 
+
+    deployTwo();
+
+    vm.stopBroadcast();
+  }
+
+  function deployOne() internal {
     // metamorphicContractFactory = new MetamorphicContractFactory("");
 
     // c1 = new ContractOne();
     bytes32 salt = bytes32(uint256(uint160(address(msg.sender)))) << 96;
-    // address metamorphedContractOne =  0x70cbaafb90A720D77D79AF0Cf97b0486F83a1953;
     // address metamorphedContractOne =  
     //   metamorphicContractFactory.deployMetamorphicContractFromExistingImplementation(salt, address(c1), "");
+  }
 
-    // assertEq(ContractOne(metamorphedContractOne).add(5), 5 + 1);
-
-    // ContractOne(metamorphedContractOne).kill();
+  function killOne() internal {
+    address metamorphedContractOne =  0x9DC9c6f143eF0c9e313B430cA316Dc6CD8d50042;
+    ContractOne(metamorphedContractOne).kill();
     // ContractOne(metamorphedContractOne).add(2);
+  }
 
+  function deployTwo() internal {
+    bytes32 salt = bytes32(uint256(uint160(address(msg.sender)))) << 96;
     c2 = new ContractTwo();
-    metamorphicContractFactory = MetamorphicContractFactory(0x6476a517b8353B240707481cDbBdA8c5AafDB519);
+    metamorphicContractFactory = MetamorphicContractFactory(0x58be20B47283799693d136B26C5F4a64BC99BAAf);
     address metamorphedContractTwo =  
       metamorphicContractFactory.deployMetamorphicContractFromExistingImplementation(salt, address(c2), "");
     // assertEq(metamorphedContractOne, metamorphedContractTwo);
-
-    vm.stopBroadcast();
   }
+
 }
 
 

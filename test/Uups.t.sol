@@ -7,7 +7,7 @@ import {Counter2} from "src/uups/Counter2.sol";
 import "lib/forge-std/src/Test.sol";
 
 interface IERC1967Proxy {
-    function owner() external view returns(address);
+    function owner() external view returns (address);
     function upgradeTo(address newImplementation) external;
     function upgradeToAndCall(address newImplementation, bytes memory data) external payable;
 }
@@ -67,4 +67,3 @@ contract UupsProxyTest is Test {
         IERC1967Proxy(address(proxy)).upgradeTo(address(this));
     }
 }
-

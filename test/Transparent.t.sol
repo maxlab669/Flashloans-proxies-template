@@ -63,13 +63,13 @@ contract TransparentProxyTest is Test {
         assertEq(Box2(address(proxy)).lack(), 1);
 
         Box2(address(proxy)).increment();
-        assertEq(Box2(address(proxy)).retrieve(), 99 +1 + 1);
+        assertEq(Box2(address(proxy)).retrieve(), 99 + 1 + 1);
 
         vm.stopPrank();
 
         vm.expectRevert("Ownable: caller is not the owner");
         proxyAdmin.upgrade(proxy, address(this));
-        
+
         Box2(address(proxy)).store(1e18);
         assertEq(Box2(address(proxy)).retrieve(), 1e18);
 
