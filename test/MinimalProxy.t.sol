@@ -24,7 +24,7 @@ contract Implementation {
         a = _a;
     }
 
-    function get() public returns(uint){ 
+    function get() public view returns(uint){ 
         return a;
     }
 }
@@ -35,18 +35,17 @@ contract ClonesTest is Test {
     function testClones() external {
         address implementation = address(new Implementation());
         Factory factory = new Factory(implementation);
+        assertEq(factory.implementation(), implementation);
 
         address newClone = factory.deployClone(0);
         bytes32 salt = keccak256(abi.encode(block.timestamp, 0));
         assertEq(newClone, Clones.predictDeterministicAddress(implementation, salt, address(factory)));
-
         Implementation(newClone).set(5);
         assertEq(Implementation(newClone).get(), 5);
 
         newClone = factory.deployClone(1);
         salt = keccak256(abi.encode(block.timestamp, 1));
         assertEq(newClone, Clones.predictDeterministicAddress(implementation, salt, address(factory)));
-
         Implementation(newClone).set(10);
         assertEq(Implementation(newClone).get(), 10);
     }
