@@ -1,45 +1,21 @@
-// SPDX-License-Identifier: MIT
-
+// SPDX-License-Identifier: agpl-3.0
 pragma solidity ^0.8.0;
 
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IPoolAddressesProvider, IFlashLoanReceiver, IPool} from "./interfaces/IAaveV3Interfaces.sol";
+import {IFlashLoanReceiver, ILendingPoolAddressesProvider, ILendingPool} 
+    from "src/flashloan/interfaces/IAaveV2Interfaces.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract AaveV3Borrower is Ownable, IFlashLoanReceiver{
+contract AaveV2Borrower is Ownable, IFlashLoanReceiver {
     using SafeERC20 for IERC20;
 
-    IPoolAddressesProvider public override ADDRESSES_PROVIDER;
-    IPool public override POOL;
+    ILendingPoolAddressesProvider public override ADDRESSES_PROVIDER;
+    ILendingPool public override LENDING_POOL;
 
-    constructor(IPoolAddressesProvider provider) {
+    constructor(ILendingPoolAddressesProvider provider) {
         ADDRESSES_PROVIDER = provider;
-        POOL = IPool(provider.getPool());
-    }
-
-    receive() external payable {}
-
-
-    function transferOutEth() external onlyOwner {
-        payable(owner()).transfer(address(this).balance);
-    }
-
-    function transferOutTokens(address[] calldata tokens) external onlyOwner {
-        uint i = 0;
-        for (; i < tokens.length; ) {
-            uint balance = IERC20(tokens[i]).balanceOf(address(this));
-            IERC20(tokens[i]).transfer(owner(), balance);
-
-            unchecked {
-                ++i;
-            }
-        }
-    }
-
-    function changePool(IPoolAddressesProvider provider) external onlyOwner {
-        ADDRESSES_PROVIDER = provider;
-        POOL = IPool(provider.getPool());
+        LENDING_POOL = ILendingPool(provider.getLendingPool());
     }
 
     function requestFlashLoan(
@@ -52,7 +28,7 @@ contract AaveV3Borrower is Ownable, IFlashLoanReceiver{
         address onBehalfOf = address(this);
         uint16 referralCode = 0;
 
-        POOL.flashLoan(
+        LENDING_POOL.flashLoan(
             receiverAddress,
             assets,
             amounts,
@@ -62,16 +38,20 @@ contract AaveV3Borrower is Ownable, IFlashLoanReceiver{
             referralCode
         );
     }
-    
-    function  executeOperation(
+
+    function executeOperation(
         address[] calldata assets,
         uint256[] calldata amounts,
         uint256[] calldata premiums,
         address initiator,
         bytes calldata params
-    )  external override returns (bool) {
+    )
+        external
+        override
+        returns (bool)
+    {
         require(initiator == address(this), "wrong initiator");
-        require(msg.sender == address(POOL), "wrong caller");
+        require(msg.sender == address(LENDING_POOL), "wrong caller");
 
         // logic
         {
@@ -87,7 +67,7 @@ contract AaveV3Borrower is Ownable, IFlashLoanReceiver{
         uint i = 0;
         for (; i < assets.length; ) {
             uint256 totalAmount = amounts[i] + premiums[i];
-            IERC20(assets[i]).safeApprove(address(POOL), totalAmount);
+            IERC20(assets[i]).safeApprove(address(LENDING_POOL), totalAmount);
 
             unchecked {
                 ++i;
@@ -96,4 +76,5 @@ contract AaveV3Borrower is Ownable, IFlashLoanReceiver{
 
         return true;
     }
+
 }
