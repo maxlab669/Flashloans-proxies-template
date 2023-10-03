@@ -11,6 +11,8 @@ import {BalancerV2Borrower} from "src/flashloan/BalancerV2Borrower.sol";
 import {UniswapV2Borrower} from "src/flashloan/UniswapV2Borrower.sol";
 import {UniswapV3Borrower} from "src/flashloan/UniswapV3Borrower.sol";
 import {DodoV2Borrower} from "src/flashloan/DodoV2Borrower.sol";
+import {MakerDaiBorrower} from "src/flashloan/MakerDaiBorrower.sol";
+import {IERC3156FlashLender} from "src/flashloan/interfaces/IMakerDaiInterfaces.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract FlashloanTest is Test {
@@ -211,5 +213,21 @@ contract FlashloanTest is Test {
         assertEq(address(this).balance, msgValue + balanceBefore);
     }
 
+    function testMakerDaiFlashloan() external {
+        address lender = 0x60744434d6339a6B27d73d9Eda62b6F66a0a04FA; // mainnet
+        uint amount = IERC3156FlashLender(lender).maxFlashLoan(DAI); // 500 million
+        
+        MakerDaiBorrower makerDaiBorrower = new MakerDaiBorrower(lender);
+        borrower = address(makerDaiBorrower);
+
+        uint msgValue = 1 ether;
+        vm.deal(borrower, msgValue);
+        uint balanceBefore = address(this).balance;
+
+        bytes memory data = abi.encode(address(this), msgValue);
+        makerDaiBorrower.flashBorrow(DAI, amount, data);
+        assertTrue(isFlashloanReceivedSuccessfully);
+        assertEq(address(this).balance, msgValue + balanceBefore);
+    }
 
 }
