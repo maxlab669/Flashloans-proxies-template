@@ -3,16 +3,16 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import {Diamond} from "src/diamond/Diamond.sol";
-import {IDiamond} from "src/diamond/interfaces/IDiamond.sol";
-import {IDiamondCut} from "src/diamond/interfaces/IDiamondCut.sol";
-import {LibDiamond} from "src/diamond/libraries/LibDiamond.sol";
-import {IERC173} from "src/diamond/interfaces/IERC173.sol";
-import {DiamondCutFacet} from "src/diamond/facets/DiamondCutFacet.sol";
-import {DiamondLoupeFacet} from "src/diamond/facets/DiamondLoupeFacet.sol";
-import {OwnershipFacet} from "src/diamond/facets/OwnershipFacet.sol";
-import {Facet1} from "src/diamond/facets/Test1Facet.sol";
-import {Facet2} from "src/diamond/facets/Test2Facet.sol";
+import {Diamond} from "src/proxy/diamond/Diamond.sol";
+import {IDiamond} from "src/proxy/diamond/interfaces/IDiamond.sol";
+import {IDiamondCut} from "src/proxy/diamond/interfaces/IDiamondCut.sol";
+import {LibDiamond} from "src/proxy/diamond/libraries/LibDiamond.sol";
+import {IERC173} from "src/proxy/diamond/interfaces/IERC173.sol";
+import {DiamondCutFacet} from "src/proxy/diamond/facets/DiamondCutFacet.sol";
+import {DiamondLoupeFacet} from "src/proxy/diamond/facets/DiamondLoupeFacet.sol";
+import {OwnershipFacet} from "src/proxy/diamond/facets/OwnershipFacet.sol";
+import {Facet1} from "src/proxy/diamond/facets/Test1Facet.sol";
+import {Facet2} from "src/proxy/diamond/facets/Test2Facet.sol";
 
 contract DiamondTest is Test{
     Diamond public diamond;

@@ -6,8 +6,8 @@ import "forge-std/Test.sol";
 import {BeaconProxy} from "openzeppelin-contracts/contracts/proxy/beacon/BeaconProxy.sol";
 import {IBeacon} from "openzeppelin-contracts/contracts/proxy/beacon/IBeacon.sol";
 import {UpgradeableBeacon} from "openzeppelin-contracts/contracts/proxy/beacon/UpgradeableBeacon.sol";
-import {Box} from "src/transparent/Box.sol";
-import {Box2} from "src/transparent/Box2.sol";
+import {Box} from "src/proxy/transparent/Box.sol";
+import {Box2} from "src/proxy/transparent/Box2.sol";
  
 contract BeaconTest is Test{
     UpgradeableBeacon public beacon;

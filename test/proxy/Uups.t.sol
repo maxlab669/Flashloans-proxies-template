@@ -2,8 +2,8 @@
 pragma solidity ^0.8.13;
 
 import {ERC1967Proxy} from "openzeppelin-contracts/contracts/proxy/ERC1967/ERC1967Proxy.sol";
-import {Counter} from "src/uups/Counter.sol";
-import {Counter2} from "src/uups/Counter2.sol";
+import {Counter} from "src/proxy/uups/Counter.sol";
+import {Counter2} from "src/proxy/uups/Counter2.sol";
 import "forge-std/Test.sol";
 
 interface IERC1967Proxy {

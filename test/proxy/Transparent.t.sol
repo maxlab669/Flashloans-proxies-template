@@ -6,8 +6,8 @@ import {
     TransparentUpgradeableProxy,
     ITransparentUpgradeableProxy
 } from "openzeppelin-contracts/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
-import {Box} from "src/transparent/Box.sol";
-import {Box2} from "src/transparent/Box2.sol";
+import {Box} from "src/proxy/transparent/Box.sol";
+import {Box2} from "src/proxy/transparent/Box2.sol";
 import "forge-std/Test.sol";
 
 // forge script script/DeployTransparent.s.sol:DeployTransparent --private-key $KEY  --rpc-url https://rpc.ankr.com/eth_goerli -vvvv  --verify --etherscan-api-key $API --broadcast
