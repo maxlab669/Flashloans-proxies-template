@@ -8,6 +8,9 @@ import {ILendingPoolAddressesProvider} from "src/flashloan/interfaces/IAaveV2Int
 import {AaveV3Borrower} from "src/flashloan/AaveV3Borrower.sol";
 import {IPoolAddressesProvider} from "src/flashloan/interfaces/IAaveV3Interfaces.sol";
 import {BalancerV2Borrower} from "src/flashloan/BalancerV2Borrower.sol";
+import {UniswapV2Borrower} from "src/flashloan/UniswapV2Borrower.sol";
+import {UniswapV3Borrower} from "src/flashloan/UniswapV3Borrower.sol";
+import {DodoV2Borrower} from "src/flashloan/DodoV2Borrower.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract FlashloanTest is Test {
@@ -138,6 +141,72 @@ contract FlashloanTest is Test {
 
         bytes memory data = abi.encode(address(this), msgValue);
         balancerV2Borrower.requestFlashLoan(borrowTokens, borrowAmounts, data);
+        assertTrue(isFlashloanReceivedSuccessfully);
+        assertEq(address(this).balance, msgValue + balanceBefore);
+    }
+
+    function testUniV2Flashswap() external {
+        address token0 = DAI;
+        address token1 = USDC;
+        uint amount0 = 0;
+        uint amount1 = 100 * (10 ** IERC20(token1).decimals());
+
+        UniswapV2Borrower uniswapV2Borrower = new UniswapV2Borrower(token0, token1);
+        borrower = address(uniswapV2Borrower);
+
+        uint msgValue = 1 ether;
+        vm.deal(borrower, msgValue);
+        uint balanceBefore = address(this).balance;
+
+        bytes memory data = abi.encode(address(this), msgValue);
+        uniswapV2Borrower.flashSwap(amount0, amount1, data);
+        assertTrue(isFlashloanReceivedSuccessfully);
+        assertEq(address(this).balance, msgValue + balanceBefore);
+    }
+
+    function testUniV3Flashswap() external {
+        address token0 = WBTC;
+        address token1 = WETH;
+        uint24 fee = 3000; // 0.03 % call from https://etherscan.io/address/0xcbcdf9626bc03e24f779434178a73a0b4bad62ed#readContract#F2
+        uint amount0 = 100 * (10 ** IERC20(token0).decimals());
+        uint amount1 = 0;
+
+        UniswapV3Borrower uniswapV3Borrower = new UniswapV3Borrower(token0, token1, fee);
+        borrower = address(uniswapV3Borrower);
+
+        uint msgValue = 1 ether;
+        vm.deal(borrower, msgValue);
+        uint balanceBefore = address(this).balance;
+
+        bytes memory targetCallData = abi.encode(address(this), msgValue);
+        bytes memory data = 
+            abi.encode(UniswapV3Borrower.FlashCallbackData(amount0, amount1, address(this), targetCallData));
+        
+        uniswapV3Borrower.flashSwap(amount0, amount1, data);
+        assertTrue(isFlashloanReceivedSuccessfully);
+        assertEq(address(this).balance, msgValue + balanceBefore);
+    }
+
+    function testDodoV2Flashloan() external {
+        // get pools at https://app.dodoex.io/pool?network=mainnet, 
+        // some pools dont support flashloan, check write contract on etherscan and then use the pool
+        address pool = 0x983dfBa1c0724786598Af0E63a9a6f94aAbd24A1; // WETH-NEAR
+        // address pool = 0x3058EF90929cb8180174D74C507176ccA6835D73; // USDT-DAI
+        address loanToken = WETH;
+        uint loanAmount = 10 * (10 ** IERC20(loanToken).decimals());
+
+        DodoV2Borrower dodoV2Borrower = new DodoV2Borrower();
+        borrower = address(dodoV2Borrower);
+
+        uint msgValue = 1 ether;
+        vm.deal(borrower, msgValue);
+        uint balanceBefore = address(this).balance;
+
+        bytes memory targetCallData = abi.encode(address(this), msgValue);
+        bytes memory data = 
+            abi.encode(DodoV2Borrower.FlashCallbackData(pool, loanToken, loanAmount, targetCallData));
+        
+        dodoV2Borrower.dodoFlashLoan(pool, loanAmount, loanToken, data);
         assertTrue(isFlashloanReceivedSuccessfully);
         assertEq(address(this).balance, msgValue + balanceBefore);
     }
