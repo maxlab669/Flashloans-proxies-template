@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {LibDiamond} from "src/diamond/libraries/LibDiamond.sol";
-import "forge-std/Test.sol";
+import {LibDiamond} from "src/proxy/diamond/libraries/LibDiamond.sol";
 
 contract Facet2 {
     struct Facet2Storage {

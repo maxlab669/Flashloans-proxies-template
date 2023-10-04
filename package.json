@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/nuthan2x/proxies#readme",
   "dependencies": {
+    "@pythnetwork/pyth-common-js": "^1.4.0",
     "chai": "^4.3.10",
     "ethers": "5.7",
     "keccak256": "^1.0.6",
